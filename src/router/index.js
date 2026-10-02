@@ -4,6 +4,7 @@ import RegisterView from '@/views/Auth/RegisterView.vue'
 import LoginView from '@/views/Auth/LoginView.vue'
 import { useAuthStore } from '@/stores/auth.js'
 import BookAppointmentView from '@/views/BookAppointmentView.vue'
+import MyAppointmentView from '@/views/MyAppointmentView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,12 @@ const router = createRouter({
       component: BookAppointmentView,
        meta: { auth: true}
     },
+    {
+      path: '/my-appointments',
+      name: 'appointment',
+      component: MyAppointmentView,
+       meta: { auth: true}
+    },
     // {
     //   path: '/about',
     //   name: 'about',
@@ -46,6 +53,9 @@ router.beforeEach(async (to, from) => {
   await authStore.getUser()
   if(authStore.user && to.meta.guest){
     return { name: "home"}
+  }
+  if(!authStore.user && to.meta.auth){
+    return { name: "login"}
   }
 })
 export default router

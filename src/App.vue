@@ -15,7 +15,7 @@ onMounted(() => {
   <header>
     <div class="navbar bg-base-100 shadow-sm">
       <div class="flex-1">
-        <a href="/" class="btn btn-ghost text-xl">HMI</a>
+        <a href="/" class="btn btn-ghost text-xl">Care Point</a>
       </div>
       <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
@@ -26,6 +26,12 @@ onMounted(() => {
              <form @submit.prevent="authStore.logout">
                 <input type="submit" value="Logout">
             </form>
+          </li>
+          <li v-if="authStore.user">
+             <a><RouterLink :to="{name: 'appointment'}">My Appointments</RouterLink></a>
+          </li>
+          <li v-if="authStore.user">
+             <a class="btn btn-primary btn-sm md:btn-md"><RouterLink :to="{name: 'book'}">Book Now</RouterLink></a>
           </li>
           <!-- <li>
             <details>
@@ -40,9 +46,6 @@ onMounted(() => {
       </div>
     </div>
   </header>
-  <div>
-    <h1>HelloWorld</h1>
-  </div>
 
   <RouterView />
 </template>

@@ -40,7 +40,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Book</h1>
   <main class="w-[92%] max-w-7xl mx-auto border border-gray-100 rounded-lg shadow-sm p-4 sm:p-8 my-8">
     <div class="border rounded-lg w-full max-w-sm mx-auto p-4 sm:p-6">
          <h1 class="text-3xl">Book Appointment</h1>
@@ -71,8 +70,9 @@ onMounted(() => {
           <ul class="my-4">
             <li 
               v-for="slot in appointmentStore.slots" 
-              :key="slot" 
-              class="badge badge-secondary badge-sm mr-2"
+              :key="slot"
+              :class="time === slot ? 'badge-primary' : 'badge-secondary'"
+              class="badge badge-sm mr-2"
               @click="setTime(slot)">
               {{ slot }}
               </li>

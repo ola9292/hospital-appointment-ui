@@ -11,7 +11,8 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                 slots: null,
                 slotLoading: false,
                 doctors: [],
-                success: null
+                success: null,
+                appointments: []
             }
         },
         actions:{
@@ -93,6 +94,52 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                         console.log("Request completed");
                     }
                  }
+            },
+            async myAppointments(){
+                if(localStorage.getItem('token')){
+                    this.showLoading = true
+                    try {
+                        const response = await axios.get(
+                        "api/my-appointments",
+                        {
+                           headers:{
+                                authorization: `Bearer ${localStorage.getItem('token')}`
+                            }
+                        }
+                        );
+                        console.log(response.data);
+                        this.appointments = response.data.data
+                        
+                    } catch (error) {
+                        console.error(error);
+                        this.errorMessage = error.response.data.message
+                    } finally {
+                        console.log("Request completed");
+                        this.showLoading = false
+                    }
+                }
+            },
+            async cancelAppointment(id){
+                  if(localStorage.getItem('token')){
+                      try {
+                        const response = await axios.delete(
+                            `api/appointments/${id}`,
+                             {
+                            headers:{
+                                    authorization: `Bearer ${localStorage.getItem('token')}`
+                                }
+                            } 
+                            );
+                            console.log(response.data);
+                            this.router.push({name: 'appointment'});
+                            this.myAppointments()
+                        } catch (error) {
+                            console.error(error);
+                            this.errorMessage = error.response.data.message
+                        } finally {
+                            console.log("Request completed");
+                        }
+                    }
             }
         }
 })

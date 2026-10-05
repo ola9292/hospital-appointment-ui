@@ -32,15 +32,22 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                         }
                     );
                     console.log(response.data);
+                    
                     this.slotLoading = false
                     this.slots = response.data.slots
                     // this.router.push({name: 'home'});
                 } catch (error) {
                     // console.error(error);
                     console.log(error.response.data)
-                     this.errorMessage = error.response.data.message
-                      this.slotLoading = false
-                     if( error.response.data.errors){
+                    this.errorMessage = error.response.data.message
+                    this.slotLoading = false
+                    //check and remove expired token
+                    if (error.response.status === 401 || error.response.status === 403) {  
+                        localStorage.removeItem('token');
+                        this.router.push({name: 'login'});
+                        return;
+                    }
+                    if( error.response.data.errors){
                         error.response.data.errors.forEach(err => {
                             this.errors[err.field] = err.message;
                         });
@@ -62,9 +69,15 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                     }
                     );
                     console.log(response.data.data);
+                   
                     this.doctors = response.data.data
                 } catch (error) {
                     console.error(error);
+                    if (error.response.status === 401 || error.response.status === 403) {  
+                            localStorage.removeItem('token');
+                            this.router.push({name: 'login'});
+                            return;
+                        }
                     this.errorMessage = error.response.data.message
                 } finally {
                     console.log("Request completed");
@@ -84,11 +97,17 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                         }
                         );
                         console.log(response.data);
+
                         this.success = response.data.message
                         this.slots = null
                          this.slotLoading = false
                     } catch (error) {
                         console.error(error);
+                        if (error.response.status === 401 || error.response.status === 403) {  
+                            localStorage.removeItem('token');
+                            this.router.push({name: 'login'});
+                            return;
+                        }
                         this.errorMessage = error.response.data.message
                     } finally {
                         console.log("Request completed");
@@ -112,6 +131,11 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                         
                     } catch (error) {
                         console.error(error);
+                        if (error.response.status === 401 || error.response.status === 403) {  
+                            localStorage.removeItem('token');
+                            this.router.push({name: 'login'});
+                            return;
+                        }
                         this.errorMessage = error.response.data.message
                     } finally {
                         console.log("Request completed");
@@ -131,10 +155,16 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                             } 
                             );
                             console.log(response.data);
+                           
                             this.router.push({name: 'appointment'});
                             this.myAppointments()
                         } catch (error) {
                             console.error(error);
+                            if (error.response.status === 401 || error.response.status === 403) {  
+                                localStorage.removeItem('token');
+                                this.router.push({name: 'login'});
+                                return;
+                            }
                             this.errorMessage = error.response.data.message
                         } finally {
                             console.log("Request completed");

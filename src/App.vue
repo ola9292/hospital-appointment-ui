@@ -7,7 +7,6 @@ const authStore = useAuthStore()
 
 onMounted(() => {
   authStore.getUser()
-
 })
 </script>
 

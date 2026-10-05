@@ -65,16 +65,22 @@ export const useAuthStore = defineStore('authStore',  {
                             }
                         });
                         console.log(response.data);
+                        console.log(response);
+                      
                         this.user = response.data.user
 
                     } catch (error) {
                         // console.error(error);
                         // console.log(error.response.data)
-                        error.response.data.errors.forEach(err => {
-                            this.errors[err.field] = err.message;
-                        });
+                        // error.response.data.errors.forEach(err => {
+                        //     this.errors[err.field] = err.message;
+                        // });
+                        if (error.response.status === 401 || error.response.status === 403) {  
+                            localStorage.removeItem('token');
+                        }
                     } finally {
                         console.log("Request completed");
+                       
                     }
                 }
             },

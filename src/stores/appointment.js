@@ -21,7 +21,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                 try {
                     this.slotLoading = true
                     const response = await axios.get(
-                    "/api/appointments",{
+                    "/api/v1/appointments",{
                         params: {
                                 doctorId: formData.doctorId, 
                                 date: formData.date
@@ -34,12 +34,12 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                     console.log(response.data);
                     
                     this.slotLoading = false
-                    this.slots = response.data.slots
+                    this.slots = response.data.data
                     // this.router.push({name: 'home'});
                 } catch (error) {
                     // console.error(error);
                     console.log(error.response.data)
-                    this.errorMessage = error.response.data.message
+                    this.errorMessage = error.response.data.error
                     this.slotLoading = false
                     //check and remove expired token
                     if (error.response.status === 401 || error.response.status === 403) {  
@@ -61,7 +61,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                 if(localStorage.getItem('token')){
                      try {
                     const response = await axios.get(
-                    "api/doctors",
+                    "api/v1/doctors",
                     {
                        headers:{
                             authorization: `Bearer ${localStorage.getItem('token')}`
@@ -89,7 +89,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                     this.slotLoading = true
                      try {
                         const response = await axios.post(
-                        "api/appointments",formData,
+                        "api/v1/appointments",formData,
                         {
                         headers:{
                                 authorization: `Bearer ${localStorage.getItem('token')}`
@@ -100,7 +100,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
 
                         this.success = response.data.message
                         this.slots = null
-                         this.slotLoading = false
+                        this.slotLoading = false
                     } catch (error) {
                         console.error(error);
                         if (error.response.status === 401 || error.response.status === 403) {  
@@ -108,7 +108,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                             this.router.push({name: 'login'});
                             return;
                         }
-                        this.errorMessage = error.response.data.message
+                        this.errorMessage = error.response.data.error
                     } finally {
                         console.log("Request completed");
                     }
@@ -119,7 +119,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                     this.showLoading = true
                     try {
                         const response = await axios.get(
-                        "api/my-appointments",
+                        "api/v1/appointments/my-appointments",
                         {
                            headers:{
                                 authorization: `Bearer ${localStorage.getItem('token')}`
@@ -147,7 +147,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                   if(localStorage.getItem('token')){
                       try {
                         const response = await axios.delete(
-                            `api/appointments/${id}`,
+                            `api/v1/appointments/${id}`,
                              {
                             headers:{
                                     authorization: `Bearer ${localStorage.getItem('token')}`
@@ -165,7 +165,7 @@ export const useAppointmentStore = defineStore('appointmentStore',  {
                                 this.router.push({name: 'login'});
                                 return;
                             }
-                            this.errorMessage = error.response.data.message
+                            this.errorMessage = error.response.data.error
                         } finally {
                             console.log("Request completed");
                         }

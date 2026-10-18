@@ -46,9 +46,9 @@ onMounted(() => {
           <div v-if="appointmentStore.errorMessage" role="alert" class="alert alert-warning my-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span>{{ appointmentStore.errorMessage }}</span>
-        </div>
+              </svg>
+              <span>{{ appointmentStore.errorMessage }}</span>
+          </div>
          <form @submit.prevent="fetchSlots">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Doctors</legend>
@@ -66,17 +66,21 @@ onMounted(() => {
             </div>
          </form>
          <div>
-          <p v-if="appointmentStore.slotLoading">Loading...</p>
-          <ul class="my-4">
-            <li 
-              v-for="slot in appointmentStore.slots" 
-              :key="slot"
-              :class="time === slot ? 'badge-primary' : 'badge-secondary'"
-              class="badge badge-sm mr-2"
-              @click="setTime(slot)">
-              {{ slot }}
-              </li>
-          </ul>
+            <p v-if="appointmentStore.slotLoading">Loading...</p>
+            <div v-if="appointmentStore.slots?.length > 0">
+              <ul class="my-4">
+                <li 
+                  v-for="slot in appointmentStore.slots" 
+                  :key="slot"
+                  :class="time === slot ? 'badge-primary' : 'badge-secondary'"
+                  class="badge badge-sm mr-2"
+                  @click="setTime(slot)">
+                  {{ slot }}
+                  </li>
+              </ul>
+          </div>
+      
+         
           <div v-if="time" class="mt-4">
               <button @click="bookAppointment" class="btn">{{ appointmentStore.showLoading ? "Loading..." : "Book Appointment" }}</button>
           </div>

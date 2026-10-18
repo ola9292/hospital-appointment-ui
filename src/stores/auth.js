@@ -14,18 +14,18 @@ export const useAuthStore = defineStore('authStore',  {
            async register(formData){
                 try {
                     const response = await axios.post(
-                    "/api/register", formData
+                    "/api/v1/register", formData
                     );
                     console.log(response.data);
                     this.router.push({name: 'login'});
                 } catch (error) {
-                    // console.error(error);
-                    // console.log(error.response.data)
-                     this.errorMessage = error.response.data.message
-                     if( error.response.data.errors){
-                        error.response.data.errors.forEach(err => {
+                    console.log(error.response)
+                     if( error.response.data.error.errors){
+                        error.response.data.error.errors.forEach(err => {
                             this.errors[err.field] = err.message;
                         });
+                    }else{
+                         this.errorMessage = error.response.data.error
                     }
                 } finally {
                     console.log("Request completed");
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('authStore',  {
            async login(formData){
                 try {
                     const response = await axios.post(
-                    "/api/login", formData
+                    "/api/v1/login", formData
                     );
                     console.log(response.data);
                     const token = response.data.token
@@ -42,13 +42,14 @@ export const useAuthStore = defineStore('authStore',  {
                     await this.getUser()
                     this.router.push({name: 'home'});
                 } catch (error) {
-                    // console.error(error);
-                    console.log(error.response.data.message)
-                    this.errorMessage = error.response.data.message
-                    if( error.response.data.errors){
-                        error.response.data.errors.forEach(err => {
+                    console.log(error.response.data)
+                   
+                    if( error.response.data.error.errors){
+                        error.response.data.error.errors.forEach(err => {
                             this.errors[err.field] = err.message;
                         });
+                    }else{
+                         this.errorMessage = error.response.data.error
                     }
                     
                 } finally {
@@ -59,15 +60,14 @@ export const useAuthStore = defineStore('authStore',  {
                 if(localStorage.getItem('token')){
                    try {
                         const response = await axios.get(
-                        "/api/me",{
+                        "/api/v1/me",{
                             headers:{
                                 authorization: `Bearer ${localStorage.getItem('token')}`
                             }
                         });
                         console.log(response.data);
-                        console.log(response);
                       
-                        this.user = response.data.user
+                        this.user = response.data.data
 
                     } catch (error) {
                         // console.error(error);
@@ -80,7 +80,6 @@ export const useAuthStore = defineStore('authStore',  {
                         }
                     } finally {
                         console.log("Request completed");
-                       
                     }
                 }
             },
@@ -88,7 +87,7 @@ export const useAuthStore = defineStore('authStore',  {
                 if(localStorage.getItem('token')){
                    try {
                         const response = await axios.post(
-                        "/api/logout",{
+                        "/api/v1/logout",{
                             headers:{
                                 authorization: `Bearer ${localStorage.getItem('token')}`
                             }
